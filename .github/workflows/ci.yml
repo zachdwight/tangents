@@ -15,7 +15,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        brew install sfml llvm catch2 clang-format toml-plusplus
+        brew install sfml llvm catch2 clang-format tomlplusplus
 
     - name: Build with CMake
       run: |

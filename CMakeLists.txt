@@ -64,7 +64,7 @@ if(NOT TOML_INCLUDE_DIR)
     # Try pkg-config
     find_package(PkgConfig QUIET)
     if(PkgConfig_FOUND)
-        pkg_check_modules(TOML QUIET toml++)
+        pkg_check_modules(TOML QUIET tomlplusplus)
         if(TOML_FOUND)
             set(TOML_INCLUDE_DIR ${TOML_INCLUDE_DIRS})
         endif()
@@ -72,7 +72,7 @@ if(NOT TOML_INCLUDE_DIR)
 endif()
 
 if(NOT TOML_INCLUDE_DIR)
-    message(FATAL_ERROR "toml++ not found. Install with: brew install toml-plusplus")
+    message(FATAL_ERROR "toml++ not found. Install with: brew install tomlplusplus")
 endif()
 
 message(STATUS "toml++ found at ${TOML_INCLUDE_DIR}")
