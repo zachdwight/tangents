@@ -28,13 +28,22 @@ list(APPEND CMAKE_PREFIX_PATH "/usr/local")
 list(APPEND CMAKE_PREFIX_PATH "/opt")
 
 # ============================================================================
-# Find SFML
+# Find SFML (try both 3.x and 2.x)
 # ============================================================================
 
-find_package(SFML 3 COMPONENTS graphics window audio system QUIET)
+# Try SFML 3.x with correct component names (PascalCase)
+find_package(SFML 3 COMPONENTS Graphics Window Audio System QUIET)
+
+# Fall back to SFML 2.x if 3.x not found
+if(NOT SFML_FOUND)
+    find_package(SFML 2.5 COMPONENTS graphics window audio system QUIET)
+    if(SFML_FOUND)
+        message(STATUS "SFML 2.5 found (will work with Tangents)")
+    endif()
+endif()
 
 if(NOT SFML_FOUND)
-    message(STATUS "SFML 3.x not found via find_package, trying manual search...")
+    message(STATUS "SFML not found via find_package, trying manual search...")
 
     # Manual search in common Homebrew locations
     find_library(SFML_GRAPHICS_LIB sfml-graphics PATHS /usr/local/lib /opt/homebrew/lib NO_DEFAULT_PATH)
@@ -48,10 +57,10 @@ if(NOT SFML_FOUND)
         message(STATUS "SFML found manually at ${SFML_INCLUDE_DIR}")
         set(SFML_MANUAL_FOUND TRUE)
     else()
-        message(FATAL_ERROR "SFML 3.x not found. Install with: brew install sfml")
+        message(FATAL_ERROR "SFML not found. Install with: brew install sfml")
     endif()
 else()
-    message(STATUS "SFML 3.x found via find_package")
+    message(STATUS "SFML found via find_package")
 endif()
 
 # ============================================================================
