@@ -1,0 +1,21 @@
+---
+Checks: >
+  readability-*,
+  performance-*,
+  modernize-*,
+  bugprone-*,
+  cppcoreguidelines-*,
+  -readability-magic-numbers,
+  -readability-named-parameter,
+  -cppcoreguidelines-avoid-magic-numbers
+WarningsAsErrors: >
+  bugprone-*,
+  cppcoreguidelines-slicing
+HeaderFilterRegex: "(include|src)/.*\\.h(pp)?$"
+AnalyzeTemporaryDtors: true
+FormatStyle: llvm
+CheckOptions:
+  - key: readability-identifier-length.MinimumVariableNameLength
+    value: "1"
+  - key: readability-identifier-length.MinimumParameterNameLength
+    value: "1"

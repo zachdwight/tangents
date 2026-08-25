@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        brew install sfml llvm catch2 clang-format
+
+    - name: Build
+      run: |
+        cd ~/code_projects/tangents
+        make build
+
+    - name: Lint
+      run: |
+        cd ~/code_projects/tangents
+        make lint
+
+    - name: Run tests
+      run: |
+        cd ~/code_projects/tangents
+        make test
+
+    - name: Format check
+      run: |
+        cd ~/code_projects/tangents
+        clang-format --dry-run -i src/*.cpp include/*.h tests/*.cpp
