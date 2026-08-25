@@ -1,5 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include "../include/script_parser.h"
+#include "../include/story_engine.h"
 #include <filesystem>
 
 namespace fs = std::filesystem;
