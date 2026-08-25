@@ -18,21 +18,13 @@ jobs:
         brew install sfml llvm catch2 clang-format
 
     - name: Build
-      run: |
-        cd ~/code_projects/tangents
-        make build
+      run: make build
 
     - name: Lint
-      run: |
-        cd ~/code_projects/tangents
-        make lint
+      run: make lint
 
     - name: Run tests
-      run: |
-        cd ~/code_projects/tangents
-        make test
+      run: make test
 
     - name: Format check
-      run: |
-        cd ~/code_projects/tangents
-        clang-format --dry-run -i src/*.cpp include/*.h tests/*.cpp
+      run: clang-format --dry-run -i src/*.cpp include/*.h tests/*.cpp
