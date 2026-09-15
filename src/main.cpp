@@ -5,13 +5,23 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <stdexcept>
+#include <sstream>
+#include <iomanip>
 
 #include "../include/script_parser.h"
 #include "../include/story_engine.h"
 #include "../include/ui_renderer.h"
 #include "../include/audio_manager.h"
+#include "../include/save_manager.h"
 
 namespace fs = std::filesystem;
+
+enum class GameUIState {
+    NORMAL,
+    SAVE_MENU,
+    LOAD_MENU,
+    BACKLOG
+};
 
 int main() {
     try {
@@ -26,13 +36,15 @@ int main() {
         window.setFramerateLimit(60);
 
         UIRenderer renderer(1920.f, 1080.f);
+        SaveManager saveManager("saves");
 
         // Pre-load font to avoid loading from disk every frame
         sf::Font& uiFont = renderer.getFontCache().get("assets/fonts/Roboto_Condensed-Regular.ttf");
 
         std::cout << "Starting game...\n";
         sf::Clock clock;
-        bool showBacklog = false;
+        GameUIState uiState = GameUIState::NORMAL;
+        int selectedSaveSlot = 1;
 
         while (window.isOpen()) {
             while (const auto event = window.pollEvent()) {
@@ -40,13 +52,54 @@ int main() {
                     window.close();
                 } else if (const auto* keyEvent = event->getIf<sf::Event::KeyPressed>()) {
                     if (keyEvent->code == sf::Keyboard::Key::Escape) {
-                        window.close();
-                    } else if (keyEvent->code == sf::Keyboard::Key::H) {
-                        showBacklog = !showBacklog;
-                    } else if (keyEvent->code == sf::Keyboard::Key::Space) {
-                        const auto& node = engine.getCurrentNode();
-                        if (node.choices.empty() && !node.next.empty()) {
-                            engine.advanceNode();
+                        if (uiState != GameUIState::NORMAL) {
+                            uiState = GameUIState::NORMAL;
+                        } else {
+                            window.close();
+                        }
+                    } else if (uiState == GameUIState::NORMAL) {
+                        if (keyEvent->code == sf::Keyboard::Key::H) {
+                            uiState = GameUIState::BACKLOG;
+                        } else if (keyEvent->code == sf::Keyboard::Key::S) {
+                            uiState = GameUIState::SAVE_MENU;
+                            selectedSaveSlot = 1;
+                        } else if (keyEvent->code == sf::Keyboard::Key::L) {
+                            uiState = GameUIState::LOAD_MENU;
+                            selectedSaveSlot = 1;
+                        } else if (keyEvent->code == sf::Keyboard::Key::Space) {
+                            const auto& node = engine.getCurrentNode();
+                            if (node.choices.empty() && !node.next.empty()) {
+                                engine.advanceNode();
+                                saveManager.autosave(engine);
+                            }
+                        }
+                    } else if (uiState == GameUIState::BACKLOG) {
+                        if (keyEvent->code == sf::Keyboard::Key::H) {
+                            uiState = GameUIState::NORMAL;
+                        }
+                    } else if (uiState == GameUIState::SAVE_MENU) {
+                        if (keyEvent->code == sf::Keyboard::Key::Up) {
+                            selectedSaveSlot = std::max(1, selectedSaveSlot - 1);
+                        } else if (keyEvent->code == sf::Keyboard::Key::Down) {
+                            selectedSaveSlot = std::min(10, selectedSaveSlot + 1);
+                        } else if (keyEvent->code == sf::Keyboard::Key::Enter) {
+                            try {
+                                const auto& node = engine.getCurrentNode();
+                                saveManager.saveGame(engine, selectedSaveSlot, node.speaker);
+                                uiState = GameUIState::NORMAL;
+                            } catch (const std::exception& e) {
+                                std::cerr << "Save failed: " << e.what() << "\n";
+                            }
+                        }
+                    } else if (uiState == GameUIState::LOAD_MENU) {
+                        if (keyEvent->code == sf::Keyboard::Key::Up) {
+                            selectedSaveSlot = std::max(1, selectedSaveSlot - 1);
+                        } else if (keyEvent->code == sf::Keyboard::Key::Down) {
+                            selectedSaveSlot = std::min(10, selectedSaveSlot + 1);
+                        } else if (keyEvent->code == sf::Keyboard::Key::Enter) {
+                            if (saveManager.loadGame(engine, selectedSaveSlot)) {
+                                uiState = GameUIState::NORMAL;
+                            }
                         }
                     }
                 } else if (const auto* textEvent = event->getIf<sf::Event::TextEntered>()) {
@@ -69,7 +122,7 @@ int main() {
 
             window.clear(sf::Color::Black);
 
-            if (showBacklog) {
+            if (uiState == GameUIState::BACKLOG) {
                 // Render backlog view
                 sf::Text titleText(uiFont, "DIALOGUE HISTORY (Press H to close)", 28);
                 titleText.setFillColor(sf::Color::Cyan);
@@ -98,7 +151,7 @@ int main() {
                     yPos += 50.f;
                     if (yPos > 1000.f) break;  // Stop if below screen
                 }
-            } else {
+            } else if (uiState == GameUIState::NORMAL) {
                 // Render normal dialogue view
                 const auto& currentNode = engine.getCurrentNode();
 
@@ -139,11 +192,94 @@ int main() {
                     }
                 }
 
-                // Show hint to open backlog
-                sf::Text historyHintText(uiFont, "Press [H] for history", 16);
-                historyHintText.setFillColor(sf::Color{200, 200, 200});
-                historyHintText.setPosition({1600.f, 1040.f});
-                window.draw(historyHintText);
+                // Show hints
+                sf::Text hintsText(uiFont, "[H] History  [S] Save  [L] Load", 16);
+                hintsText.setFillColor(sf::Color{200, 200, 200});
+                hintsText.setPosition({1400.f, 1040.f});
+                window.draw(hintsText);
+            } else if (uiState == GameUIState::SAVE_MENU) {
+                sf::Text titleText(uiFont, "SAVE GAME", 40);
+                titleText.setFillColor(sf::Color::Cyan);
+                titleText.setPosition({800.f, 50.f});
+                window.draw(titleText);
+
+                auto saves = saveManager.listSaves();
+                float yPos = 150.f;
+
+                for (const auto& save : saves) {
+                    sf::Text slotText(uiFont, std::string(save.slot == selectedSaveSlot ? "> " : "  ") +
+                                      "Slot " + std::to_string(save.slot), 28);
+                    slotText.setFillColor(save.slot == selectedSaveSlot ? sf::Color::Yellow : sf::Color::White);
+                    slotText.setPosition({200.f, yPos});
+                    window.draw(slotText);
+
+                    if (save.exists) {
+                        sf::Text infoText(uiFont, save.title + " - " + save.timestamp, 20);
+                        infoText.setFillColor(sf::Color{200, 200, 200});
+                        infoText.setPosition({600.f, yPos});
+                        window.draw(infoText);
+
+                        std::ostringstream timeStr;
+                        int mins = static_cast<int>(save.playtimeSecs) / 60;
+                        int secs = static_cast<int>(save.playtimeSecs) % 60;
+                        timeStr << mins << "m " << secs << "s";
+                        sf::Text timeText(uiFont, timeStr.str(), 18);
+                        timeText.setFillColor(sf::Color{150, 150, 150});
+                        timeText.setPosition({1600.f, yPos});
+                        window.draw(timeText);
+                    }
+
+                    yPos += 70.f;
+                }
+
+                sf::Text instructionText(uiFont, "↑↓ Navigate  [Enter] Save  [Esc] Cancel", 18);
+                instructionText.setFillColor(sf::Color::Green);
+                instructionText.setPosition({200.f, 950.f});
+                window.draw(instructionText);
+            } else if (uiState == GameUIState::LOAD_MENU) {
+                sf::Text titleText(uiFont, "LOAD GAME", 40);
+                titleText.setFillColor(sf::Color::Cyan);
+                titleText.setPosition({800.f, 50.f});
+                window.draw(titleText);
+
+                auto saves = saveManager.listSaves();
+                float yPos = 150.f;
+
+                for (const auto& save : saves) {
+                    sf::Text slotText(uiFont, std::string(save.slot == selectedSaveSlot ? "> " : "  ") +
+                                      "Slot " + std::to_string(save.slot), 28);
+                    slotText.setFillColor(save.slot == selectedSaveSlot ? sf::Color::Yellow : sf::Color::White);
+                    slotText.setPosition({200.f, yPos});
+                    window.draw(slotText);
+
+                    if (save.exists) {
+                        sf::Text infoText(uiFont, save.title + " - " + save.timestamp, 20);
+                        infoText.setFillColor(sf::Color{200, 200, 200});
+                        infoText.setPosition({600.f, yPos});
+                        window.draw(infoText);
+
+                        std::ostringstream timeStr;
+                        int mins = static_cast<int>(save.playtimeSecs) / 60;
+                        int secs = static_cast<int>(save.playtimeSecs) % 60;
+                        timeStr << mins << "m " << secs << "s";
+                        sf::Text timeText(uiFont, timeStr.str(), 18);
+                        timeText.setFillColor(sf::Color{150, 150, 150});
+                        timeText.setPosition({1600.f, yPos});
+                        window.draw(timeText);
+                    } else {
+                        sf::Text emptyText(uiFont, "(Empty)", 20);
+                        emptyText.setFillColor(sf::Color{100, 100, 100});
+                        emptyText.setPosition({600.f, yPos});
+                        window.draw(emptyText);
+                    }
+
+                    yPos += 70.f;
+                }
+
+                sf::Text instructionText(uiFont, "↑↓ Navigate  [Enter] Load  [Esc] Cancel", 18);
+                instructionText.setFillColor(sf::Color::Green);
+                instructionText.setPosition({200.f, 950.f});
+                window.draw(instructionText);
             }
 
             window.display();
