@@ -5,6 +5,30 @@ All notable changes to Tangents will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-09-15
+
+### Added
+- **Save/Load Game State** — Full game persistence system
+  - 10 save slots with automatic slot management
+  - Serialized state: variables, flags, visited nodes, playtime, current node position
+  - Save metadata: title, timestamp, playtime display
+  - Press [S] to save, [L] to load
+  - Visual distinction between empty and filled slots
+  - Auto-save on major story progression (after choices/advances)
+- **Save Manager UI**
+  - Dedicated save and load menus with slot navigation
+  - Up/Down arrows for slot selection
+  - Enter to confirm, Escape to cancel
+  - Shows save info including playtime and node name
+- **JSON Persistence** — Simple, human-readable save file format
+
+### Technical
+- Added `SaveManager` class for state serialization/deserialization
+- Added `GameUIState` enum for menu state management
+- Save files stored in `saves/` directory
+- Auto-save functionality integrated with story progression
+- No external JSON library dependency (manual serialization)
+
 ## [0.1.1] - 2026-09-15
 
 ### Added
@@ -51,11 +75,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Upcoming
 
-### [0.2.0] - Planned
-- Save/load game state functionality
-- Relationship meter UI system
-- Character animation support
-- Shader effects (transitions, screen filters)
+### [0.3.0] - Planned
+- Relationship meter UI system (visual affinity tracking for characters)
+- Character animation support (sprite animation frames and sequences)
+- Shader effects (transitions, screen filters, fade effects)
+
+### [0.4.0] - Planned
 - Mobile platform support (iOS/Android)
-- Enhanced dialogue history with pagination
-- Settings menu (volume, resolution, etc.)
+- Settings menu (volume, resolution, text speed)
+- Dialogue speed customization
+- Graphics options (fullscreen, window size, quality settings)
+- Language/localization support
