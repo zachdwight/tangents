@@ -4,6 +4,9 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
+#include <memory>
+
+class SpriteSheet;
 
 struct AnimationFrame {
     sf::IntRect textureRect;  // Position in sprite sheet
@@ -57,6 +60,9 @@ public:
 
     // Define animations for this character
     void defineAnimation(CharacterExpression expression, const std::vector<AnimationFrame>& frames);
+
+    // Load animation from SpriteSheet
+    void loadAnimationFromSpriteSheet(CharacterExpression expression, const SpriteSheet& sheet, size_t startFrame, size_t frameCount);
 
     // Play animation by expression
     void setExpression(CharacterExpression expression, bool immediate = false);

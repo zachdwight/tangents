@@ -102,6 +102,7 @@ add_executable(tangents
     src/shader_effects.cpp
     src/settings.cpp
     src/settings_ui.cpp
+    src/sprite_sheet.cpp
 )
 
 # Include directories
@@ -145,6 +146,7 @@ if(Catch2_FOUND)
         src/shader_effects.cpp
         src/settings.cpp
         src/settings_ui.cpp
+        src/sprite_sheet.cpp
     )
     target_include_directories(tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include

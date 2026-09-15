@@ -5,6 +5,56 @@ All notable changes to Tangents will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-09-15
+
+### Added
+- **Sprite Sheet Integration System** — Frame-based sprite loading from image files
+  - `SpriteSheet` class for managing sprite sheet textures and frames
+  - JSON-based frame definitions for easy sprite sheet configuration
+  - Grid-based frame parsing for uniform sprite layouts
+  - Manual frame definition for complex sprite arrangements
+  - Frame name mapping for named frame access
+
+- **Sprite Sheet JSON Format** — Simple, human-readable sprite configuration
+  - `image` — Path to sprite sheet PNG file
+  - `frameWidth` / `frameHeight` — Individual frame dimensions
+  - `framesPerRow` — Grid-based automatic frame parsing
+  - `duration` — Frame display duration (supports per-frame overrides)
+
+- **CharacterAnimator Integration** — Load animations directly from sprite sheets
+  - `loadAnimationFromSpriteSheet()` method for seamless integration
+  - Support for loading subsets of frames for different expressions
+  - Compatible with existing animation system
+
+### Documentation
+- **SPRITE_SHEET_GUIDE.md** — Comprehensive sprite sheet documentation
+  - Quick start guide with JSON examples
+  - Sprite sheet layout examples and best practices
+  - Complete API reference
+  - Troubleshooting section
+  - Performance notes
+
+### Examples
+- **sprite_sheet_example.cpp** — 5 complete working examples
+  - JSON-based sprite sheet loading
+  - Programmatic sprite sheet creation
+  - CharacterAnimator integration
+  - Grid-based frame loading
+  - Multiple expression animations
+
+### Technical
+- ~300 lines of sprite sheet code
+- `SpriteSheet` class: texture and frame management
+- `SpriteFrame` struct: frame metadata (rect, duration, name)
+- Zero-copy frame access via const references
+- Memory efficient: frames stored as IntRect (no texture duplication)
+
+### Integration
+- Updated Makefile with sprite_sheet.cpp
+- Updated CMakeLists.txt with sprite_sheet.cpp
+- No breaking changes to existing animation system
+- Fully compatible with animation framework
+
 ## [0.5.0] - 2026-09-15
 
 ### Added

@@ -8,8 +8,8 @@ LDFLAGS  = -L/usr/local/lib -Wl,-rpath,/usr/local/lib
 LIBS     = -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
 
 # Source files
-MAIN_SRCS = src/main.cpp src/script_parser.cpp src/story_engine.cpp src/ui_renderer.cpp src/audio_manager.cpp src/save_manager.cpp src/relationship_ui.cpp src/animation.cpp src/shader_effects.cpp src/settings.cpp src/settings_ui.cpp
-TEST_SRCS = tests/test_script_parser.cpp src/script_parser.cpp src/story_engine.cpp src/save_manager.cpp src/relationship_ui.cpp src/animation.cpp src/shader_effects.cpp src/settings.cpp src/settings_ui.cpp
+MAIN_SRCS = src/main.cpp src/script_parser.cpp src/story_engine.cpp src/ui_renderer.cpp src/audio_manager.cpp src/save_manager.cpp src/relationship_ui.cpp src/animation.cpp src/shader_effects.cpp src/settings.cpp src/settings_ui.cpp src/sprite_sheet.cpp
+TEST_SRCS = tests/test_script_parser.cpp src/script_parser.cpp src/story_engine.cpp src/save_manager.cpp src/relationship_ui.cpp src/animation.cpp src/shader_effects.cpp src/settings.cpp src/settings_ui.cpp src/sprite_sheet.cpp
 
 # Targets
 TARGET = tangents

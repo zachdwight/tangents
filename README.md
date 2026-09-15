@@ -9,6 +9,8 @@ A modern C++20 visual novel framework with modular architecture, SFML rendering,
 - **TOML Script Format** for narrative design (no hardcoding)
 - **Game State Management** with variables, flags, and inventory tracking
 - **Multi-character Support** with layered positioning and alpha blending
+- **Sprite Sheet Integration** with JSON-based frame definitions and grid loading
+- **Character Animation** with 6 expression types (Idle, Talking, Happy, Sad, Shocked, Angry)
 - **Audio System** with BGM streaming and SFX playback
 - **Modular Architecture** separated into: parser, engine, rendering, audio
 - **Comprehensive Testing** with Catch2 unit tests
@@ -128,6 +130,30 @@ next = "end"
 speaker = "Narrator"
 dialogue = "The end!"
 ```
+
+## Sprite Sheet Integration
+
+Define character animations using sprite sheets with JSON frame definitions:
+
+```json
+{
+  "image": "assets/characters/alice.png",
+  "frameWidth": 256,
+  "frameHeight": 512,
+  "framesPerRow": 4,
+  "duration": 0.15
+}
+```
+
+Load and use in code:
+
+```cpp
+auto spriteSheet = SpriteSheet::loadFromJson("assets/sprites/alice_idle.json");
+CharacterAnimator alice("assets/characters/alice.png", 256, 512);
+alice.loadAnimationFromSpriteSheet(CharacterExpression::IDLE, *spriteSheet, 0, 4);
+```
+
+See [SPRITE_SHEET_GUIDE.md](SPRITE_SHEET_GUIDE.md) for detailed documentation and examples.
 
 ## Architecture
 
@@ -253,6 +279,7 @@ MIT License - See LICENSE file
 
 ## Roadmap
 
+- [x] Sprite sheet integration (v0.6.0)
 - [x] Settings menu (v0.5.0)
 - [x] Character animation support (v0.4.0)
 - [x] Shader effects (transitions, filters) (v0.4.0)
@@ -260,6 +287,5 @@ MIT License - See LICENSE file
 - [x] Save/load game state (v0.2.0)
 - [x] Dialogue history UI (v0.1.1)
 - [ ] Relationship → Expression automation
-- [ ] Sprite sheet integration examples
 - [ ] Advanced shader effects (noise, distortion)
 - [ ] Mobile platform support

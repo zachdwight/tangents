@@ -1,4 +1,5 @@
 #include "../include/animation.h"
+#include "../include/sprite_sheet.h"
 #include <iostream>
 
 // Animation class
@@ -99,6 +100,19 @@ void CharacterAnimator::defineAnimation(CharacterExpression expression,
     if (animations.find(index) != animations.end()) {
         animations[index].setFrames(frames);
     }
+}
+
+void CharacterAnimator::loadAnimationFromSpriteSheet(CharacterExpression expression,
+                                                     const SpriteSheet& sheet,
+                                                     size_t startFrame,
+                                                     size_t frameCount) {
+    std::vector<AnimationFrame> frames;
+    for (size_t i = 0; i < frameCount; ++i) {
+        if (startFrame + i >= sheet.getFrameCount()) break;
+        const auto& spriteFrame = sheet.getFrame(startFrame + i);
+        frames.push_back({spriteFrame.textureRect, spriteFrame.duration});
+    }
+    defineAnimation(expression, frames);
 }
 
 void CharacterAnimator::setExpression(CharacterExpression expression, bool immediate) {

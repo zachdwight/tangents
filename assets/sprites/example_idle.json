@@ -1,0 +1,7 @@
+{
+  "image": "assets/characters/Annie.png",
+  "frameWidth": 256,
+  "frameHeight": 512,
+  "framesPerRow": 4,
+  "duration": 0.15
+}
