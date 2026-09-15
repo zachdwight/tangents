@@ -93,7 +93,7 @@ Define your story in `assets/script.toml`:
 ```toml
 [game]
 title = "Tangents"
-version = "0.2.0"
+version = "0.3.0"
 company = "Vine Street Labs"
 
 [window]
@@ -253,10 +253,10 @@ MIT License - See LICENSE file
 
 ## Roadmap
 
+- [x] Relationship meter UI (v0.3.0)
 - [x] Save/load game state (v0.2.0)
 - [x] Dialogue history UI (v0.1.1)
-- [ ] Relationship meter UI
 - [ ] Character animation support
 - [ ] Shader effects (transitions, filters)
-- [ ] Mobile platform support
 - [ ] Settings menu (volume, resolution, speed)
+- [ ] Mobile platform support

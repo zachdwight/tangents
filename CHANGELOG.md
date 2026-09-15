@@ -5,6 +5,28 @@ All notable changes to Tangents will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-09-15
+
+### Added
+- **Relationship Meter UI** — Visual character affinity tracking system
+  - Color gradient display: Red (hostile) → Yellow (neutral) → Green (devoted)
+  - Five affinity levels: Hostile, Cold, Neutral, Friendly, Devoted
+  - Shows percentage (0-100) and descriptive label
+  - Positioned in top-right during gameplay
+  - Integrated with game state save/load
+
+### Technical
+- Added `RelationshipUI` class for meter rendering
+- Extended `GameState` with relationship tracking
+- Methods: `getRelationship()`, `setRelationship()`, `modifyRelationship()`
+- Color system: Red/Yellow/Green gradient based on affinity value
+- Example setup with 3 characters (Alice, Bob, Charlie)
+
+### Features
+- Relationships persist across save/load
+- Automatic meter layout based on character count
+- No performance impact (reuses font cache)
+
 ## [0.2.0] - 2026-09-15
 
 ### Added
@@ -75,14 +97,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Upcoming
 
-### [0.3.0] - Planned
-- Relationship meter UI system (visual affinity tracking for characters)
+### [0.4.0] - Planned
 - Character animation support (sprite animation frames and sequences)
 - Shader effects (transitions, screen filters, fade effects)
+- Character expressions tied to dialogue/relationships
 
-### [0.4.0] - Planned
-- Mobile platform support (iOS/Android)
-- Settings menu (volume, resolution, text speed)
+### [0.5.0] - Planned
+- Settings menu (volume, resolution, text speed, fullscreen)
 - Dialogue speed customization
-- Graphics options (fullscreen, window size, quality settings)
+- Graphics options (quality, window size)
 - Language/localization support
+- Mobile platform support (iOS/Android)
