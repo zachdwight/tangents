@@ -14,6 +14,8 @@
 #include "../include/audio_manager.h"
 #include "../include/save_manager.h"
 #include "../include/relationship_ui.h"
+#include "../include/animation.h"
+#include "../include/shader_effects.h"
 
 namespace fs = std::filesystem;
 
@@ -39,6 +41,7 @@ int main() {
         UIRenderer renderer(1920.f, 1080.f);
         SaveManager saveManager("saves");
         RelationshipUI relationshipUI(1920.f, 1080.f);
+        ShaderEffects shaderEffects;
 
         // Pre-load font to avoid loading from disk every frame
         sf::Font& uiFont = renderer.getFontCache().get("assets/fonts/Roboto_Condensed-Regular.ttf");
@@ -51,6 +54,8 @@ int main() {
         engine.getMutableGameState().setRelationship("Bob", 40.0);
         engine.getMutableGameState().setRelationship("Charlie", 75.0);
 
+        std::cout << "✓ Character animation system ready\n";
+        std::cout << "✓ Shader effects system ready\n";
         std::cout << "Starting game...\n";
         sf::Clock clock;
         GameUIState uiState = GameUIState::NORMAL;
@@ -132,6 +137,7 @@ int main() {
 
             float dt = clock.restart().asSeconds();
             engine.updatePlaytime(dt);
+            shaderEffects.updateTransition(dt);
 
             window.clear(sf::Color::Black);
 
