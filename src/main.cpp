@@ -16,6 +16,8 @@
 #include "../include/relationship_ui.h"
 #include "../include/animation.h"
 #include "../include/shader_effects.h"
+#include "../include/settings.h"
+#include "../include/settings_ui.h"
 
 namespace fs = std::filesystem;
 
@@ -42,6 +44,13 @@ int main() {
         SaveManager saveManager("saves");
         RelationshipUI relationshipUI(1920.f, 1080.f);
         ShaderEffects shaderEffects;
+        SettingsManager settingsManager("config/settings.json");
+
+        // Load or create settings
+        if (!settingsManager.loadSettings()) {
+            std::cout << "Creating new settings file with defaults\n";
+            settingsManager.saveSettings();
+        }
 
         // Pre-load font to avoid loading from disk every frame
         sf::Font& uiFont = renderer.getFontCache().get("assets/fonts/Roboto_Condensed-Regular.ttf");
@@ -56,6 +65,10 @@ int main() {
 
         std::cout << "✓ Character animation system ready\n";
         std::cout << "✓ Shader effects system ready\n";
+        std::cout << "✓ Settings system ready\n";
+
+        SettingsUI settingsUI(1920.f, 1080.f, settingsManager);
+
         std::cout << "Starting game...\n";
         sf::Clock clock;
         GameUIState uiState = GameUIState::NORMAL;
@@ -75,6 +88,8 @@ int main() {
                     } else if (uiState == GameUIState::NORMAL) {
                         if (keyEvent->code == sf::Keyboard::Key::H) {
                             uiState = GameUIState::BACKLOG;
+                        } else if (keyEvent->code == sf::Keyboard::Key::Tab) {
+                            settingsUI.open();
                         } else if (keyEvent->code == sf::Keyboard::Key::R) {
                             // Toggle relationship display would go here
                             // For now, always show relationships
@@ -90,6 +105,20 @@ int main() {
                                 engine.advanceNode();
                                 saveManager.autosave(engine);
                             }
+                        }
+                    } else if (settingsUI.isOpen()) {
+                        if (keyEvent->code == sf::Keyboard::Key::Up) {
+                            settingsUI.handleUp();
+                        } else if (keyEvent->code == sf::Keyboard::Key::Down) {
+                            settingsUI.handleDown();
+                        } else if (keyEvent->code == sf::Keyboard::Key::Left) {
+                            settingsUI.handleLeft();
+                        } else if (keyEvent->code == sf::Keyboard::Key::Right) {
+                            settingsUI.handleRight();
+                        } else if (keyEvent->code == sf::Keyboard::Key::Enter) {
+                            settingsUI.handleConfirm();
+                        } else if (keyEvent->code == sf::Keyboard::Key::Escape) {
+                            settingsUI.handleBack();
                         }
                     } else if (uiState == GameUIState::BACKLOG) {
                         if (keyEvent->code == sf::Keyboard::Key::H) {
@@ -138,6 +167,9 @@ int main() {
             float dt = clock.restart().asSeconds();
             engine.updatePlaytime(dt);
             shaderEffects.updateTransition(dt);
+            if (settingsUI.isOpen()) {
+                settingsUI.update(dt);
+            }
 
             window.clear(sf::Color::Black);
 
@@ -302,6 +334,11 @@ int main() {
                 instructionText.setFillColor(sf::Color::Green);
                 instructionText.setPosition({200.f, 950.f});
                 window.draw(instructionText);
+            }
+
+            // Render settings UI (overlays everything)
+            if (settingsUI.isOpen()) {
+                settingsUI.render(window, uiFont);
             }
 
             window.display();

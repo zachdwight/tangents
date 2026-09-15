@@ -100,6 +100,8 @@ add_executable(tangents
     src/relationship_ui.cpp
     src/animation.cpp
     src/shader_effects.cpp
+    src/settings.cpp
+    src/settings_ui.cpp
 )
 
 # Include directories
@@ -141,6 +143,8 @@ if(Catch2_FOUND)
         src/relationship_ui.cpp
         src/animation.cpp
         src/shader_effects.cpp
+        src/settings.cpp
+        src/settings_ui.cpp
     )
     target_include_directories(tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
