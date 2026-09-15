@@ -107,10 +107,8 @@ if(NOT TOML_INCLUDE_DIR)
 endif()
 
 if(NOT TOML_INCLUDE_DIR)
-    message(FATAL_ERROR "toml++ not found. Install with: brew install tomlplusplus")
+    message(STATUS "toml++ not found via detection, will use default include paths")
 endif()
-
-message(STATUS "toml++ found at ${TOML_INCLUDE_DIR}")
 
 # ============================================================================
 # Main executable
@@ -136,6 +134,8 @@ target_include_directories(tangents PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${SFML_INCLUDE_DIR}
     ${TOML_INCLUDE_DIR}
+    /usr/local/include/toml++
+    /opt/homebrew/include/toml++
     /usr/local/include
     /opt/homebrew/include
 )
