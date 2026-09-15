@@ -9,37 +9,20 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2 -Wall -Wextra -Wpedantic")
 # Setup paths for Homebrew and other package managers
 # ============================================================================
 
-# Homebrew Intel and Apple Silicon paths
+# Add common Homebrew paths to CMAKE_PREFIX_PATH
 if(APPLE)
-    # Apple Silicon (M1/M2/M3)
-    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
-        list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew")
-        list(APPEND CMAKE_PREFIX_PATH "/opt/homebrew/opt/sfml")
-    endif()
-    # Intel Macs
-    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
-        list(APPEND CMAKE_PREFIX_PATH "/usr/local")
-        list(APPEND CMAKE_PREFIX_PATH "/usr/local/opt/sfml")
-    endif()
+    list(APPEND CMAKE_PREFIX_PATH "/usr/local" "/opt/homebrew")
 endif()
 
-# Standard Unix paths
-list(APPEND CMAKE_PREFIX_PATH "/usr/local")
-list(APPEND CMAKE_PREFIX_PATH "/opt")
-
 # ============================================================================
-# Find SFML (try both 3.x and 2.x)
+# Find SFML
 # ============================================================================
 
-# Try SFML 3.x with correct component names (PascalCase)
+# Try to find SFML (3.x preferred, 2.x fallback)
 find_package(SFML 3 COMPONENTS Graphics Window Audio System QUIET)
 
-# Fall back to SFML 2.x if 3.x not found
 if(NOT SFML_FOUND)
     find_package(SFML 2.5 COMPONENTS graphics window audio system QUIET)
-    if(SFML_FOUND)
-        message(STATUS "SFML 2.5 found (will work with Tangents)")
-    endif()
 endif()
 
 if(NOT SFML_FOUND)

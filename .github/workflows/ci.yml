@@ -16,20 +16,12 @@ jobs:
     - name: Install dependencies
       run: |
         brew install sfml llvm catch2 clang-format tomlplusplus
-        echo "PKG_CONFIG_PATH=$(brew --prefix tomlplusplus)/lib/pkgconfig:$PKG_CONFIG_PATH" >> $GITHUB_ENV
-        echo "CMAKE_PREFIX_PATH=$(brew --prefix sfml):$(brew --prefix tomlplusplus):$CMAKE_PREFIX_PATH" >> $GITHUB_ENV
-        echo "SFML_DIR=$(brew --prefix sfml)" >> $GITHUB_ENV
-
-    - name: Verify dependencies
-      run: |
-        echo "SFML location: $(brew --prefix sfml)"
-        find $(brew --prefix sfml) -name "*.dylib" | head -5
 
     - name: Build with CMake
       run: |
         mkdir -p build
         cd build
-        cmake -DSFML_DIR=${{ env.SFML_DIR }} ..
+        cmake ..
         make
 
     - name: Lint
