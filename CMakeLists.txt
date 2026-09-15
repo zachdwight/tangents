@@ -160,8 +160,25 @@ if(Catch2_FOUND)
     target_include_directories(tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
         ${TOML_INCLUDE_DIR}
+        /usr/local/include/toml++
+        /opt/homebrew/include/toml++
+        /usr/local/include
+        /opt/homebrew/include
     )
     target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
+
+    # Link SFML to tests
+    if(SFML_FOUND)
+        target_link_libraries(tests PRIVATE SFML::Graphics SFML::Window SFML::Audio SFML::System)
+    else()
+        target_link_libraries(tests PRIVATE
+            ${SFML_GRAPHICS_LIB}
+            ${SFML_WINDOW_LIB}
+            ${SFML_AUDIO_LIB}
+            ${SFML_SYSTEM_LIB}
+        )
+        target_link_directories(tests PRIVATE /usr/local/lib /opt/homebrew/lib)
+    endif()
     add_test(NAME TangentsTests COMMAND tests)
     message(STATUS "Tests enabled")
 else()
