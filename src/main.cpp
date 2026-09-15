@@ -13,6 +13,7 @@
 #include "../include/ui_renderer.h"
 #include "../include/audio_manager.h"
 #include "../include/save_manager.h"
+#include "../include/relationship_ui.h"
 
 namespace fs = std::filesystem;
 
@@ -37,9 +38,18 @@ int main() {
 
         UIRenderer renderer(1920.f, 1080.f);
         SaveManager saveManager("saves");
+        RelationshipUI relationshipUI(1920.f, 1080.f);
 
         // Pre-load font to avoid loading from disk every frame
         sf::Font& uiFont = renderer.getFontCache().get("assets/fonts/Roboto_Condensed-Regular.ttf");
+
+        // Set up character relationships (example characters)
+        relationshipUI.setCharacters({"Alice", "Bob", "Charlie"});
+
+        // Initialize example relationships
+        engine.getMutableGameState().setRelationship("Alice", 60.0);
+        engine.getMutableGameState().setRelationship("Bob", 40.0);
+        engine.getMutableGameState().setRelationship("Charlie", 75.0);
 
         std::cout << "Starting game...\n";
         sf::Clock clock;
@@ -60,6 +70,9 @@ int main() {
                     } else if (uiState == GameUIState::NORMAL) {
                         if (keyEvent->code == sf::Keyboard::Key::H) {
                             uiState = GameUIState::BACKLOG;
+                        } else if (keyEvent->code == sf::Keyboard::Key::R) {
+                            // Toggle relationship display would go here
+                            // For now, always show relationships
                         } else if (keyEvent->code == sf::Keyboard::Key::S) {
                             uiState = GameUIState::SAVE_MENU;
                             selectedSaveSlot = 1;
@@ -197,6 +210,9 @@ int main() {
                 hintsText.setFillColor(sf::Color{200, 200, 200});
                 hintsText.setPosition({1400.f, 1040.f});
                 window.draw(hintsText);
+
+                // Render relationship meters
+                relationshipUI.render(window, uiFont, engine.getGameState());
             } else if (uiState == GameUIState::SAVE_MENU) {
                 sf::Text titleText(uiFont, "SAVE GAME", 40);
                 titleText.setFillColor(sf::Color::Cyan);

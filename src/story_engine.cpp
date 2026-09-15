@@ -1,5 +1,6 @@
 #include "../include/story_engine.h"
 #include <stdexcept>
+#include <algorithm>
 
 double GameState::getVar(const std::string& name, double defVal) const {
     auto it = variables.find(name);
@@ -20,6 +21,20 @@ void GameState::setFlag(const std::string& name, bool value) {
     } else {
         flags.erase(name);
     }
+}
+
+double GameState::getRelationship(const std::string& character, double defVal) const {
+    auto it = relationships.find(character);
+    return (it != relationships.end()) ? it->second : defVal;
+}
+
+void GameState::setRelationship(const std::string& character, double affinity) {
+    relationships[character] = std::clamp(affinity, 0.0, 100.0);
+}
+
+void GameState::modifyRelationship(const std::string& character, double delta) {
+    double current = getRelationship(character, 50.0);
+    setRelationship(character, current + delta);
 }
 
 StoryEngine::StoryEngine(const Script& script)

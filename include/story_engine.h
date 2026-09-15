@@ -10,6 +10,7 @@ struct GameState {
     std::unordered_map<std::string, double> variables;
     std::unordered_set<std::string> flags;
     std::vector<std::string> inventory;
+    std::unordered_map<std::string, double> relationships;  // Character -> affinity (0-100)
     double playtimeSecs = 0.0;
     std::string lastChosenKey;
     std::unordered_set<std::string> nodesVisited;
@@ -19,6 +20,10 @@ struct GameState {
     void setVar(const std::string& name, double value);
     bool hasFlag(const std::string& name) const;
     void setFlag(const std::string& name, bool value = true);
+
+    double getRelationship(const std::string& character, double defVal = 50.0) const;
+    void setRelationship(const std::string& character, double affinity);
+    void modifyRelationship(const std::string& character, double delta);
 };
 
 struct GameConfig {
