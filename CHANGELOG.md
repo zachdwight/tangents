@@ -5,6 +5,45 @@ All notable changes to Tangents will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-09-15
+
+### Added
+- **Character Animation System** — Frame-based sprite animation framework
+  - Animation class for managing sprite frame sequences
+  - CharacterAnimator for character-specific expressions
+  - Six expression types: Idle, Talking, Happy, Sad, Shocked, Angry
+  - Support for sprite sheets with configurable frame rectangles
+  - Smooth animation playback with delta-time updates
+  - Loop control and frame advancement
+  - Foundation for relationship-based expression changes
+
+- **Shader Effects System** — Transition and screen effect framework
+  - Fade transitions (black/white) with configurable duration
+  - Screen effects: brightness, color tint, blur simulation
+  - Smooth easing (ease-in-out quadratic) for transitions
+  - Dynamic effect intensity control (0.0-1.0 range)
+  - SFML Shader support with software fallback
+  - Ready for advanced effects (noise, distortion, etc.)
+
+### Technical
+- `Animation` class: Frame-based sprite animation sequencing
+- `CharacterAnimator` class: Multi-expression character animation management
+- `ShaderEffects` class: Transition and screen effect management
+- Delta-time based updates for smooth motion
+- SFML 3.x compatible vector-based rect construction
+- Zero runtime cost when effects not in use
+
+### Integration
+- Animation and shader systems initialized at game start
+- Shader transitions update in main game loop
+- Foundation for relationship-to-expression mapping
+- Prepared for sprite sheet integration
+
+### Performance
+- Frame advancement: 60+ FPS capable
+- Transition timing: Precise frame-based easing
+- Memory efficient: Only active animations consume CPU
+
 ## [0.3.0] - 2026-09-15
 
 ### Added
@@ -97,14 +136,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Upcoming
 
-### [0.4.0] - Planned
-- Character animation support (sprite animation frames and sequences)
-- Shader effects (transitions, screen filters, fade effects)
-- Character expressions tied to dialogue/relationships
-
 ### [0.5.0] - Planned
 - Settings menu (volume, resolution, text speed, fullscreen)
 - Dialogue speed customization
 - Graphics options (quality, window size)
+- Character expression automation (tie animations to relationships)
+- Sprite sheet integration examples
+
+### [0.6.0] - Planned
+- Advanced shader effects (noise, distortion, pixelation)
+- Character portrait animation sequences
+- Scene transitions with custom shader effects
 - Language/localization support
 - Mobile platform support (iOS/Android)
