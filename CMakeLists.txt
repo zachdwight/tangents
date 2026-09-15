@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(Tangents VERSION 0.1.0 LANGUAGES CXX)
+project(Tangents VERSION 0.4.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -96,6 +96,10 @@ add_executable(tangents
     src/story_engine.cpp
     src/ui_renderer.cpp
     src/audio_manager.cpp
+    src/save_manager.cpp
+    src/relationship_ui.cpp
+    src/animation.cpp
+    src/shader_effects.cpp
 )
 
 # Include directories
@@ -133,6 +137,10 @@ if(Catch2_FOUND)
         tests/test_script_parser.cpp
         src/script_parser.cpp
         src/story_engine.cpp
+        src/save_manager.cpp
+        src/relationship_ui.cpp
+        src/animation.cpp
+        src/shader_effects.cpp
     )
     target_include_directories(tests PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
