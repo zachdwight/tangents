@@ -18,6 +18,22 @@ void TextureCache::clear() {
     textures.clear();
 }
 
+sf::Font& FontCache::get(const std::string& path) {
+    auto it = fonts.find(path);
+    if (it != fonts.end()) return it->second;
+
+    sf::Font font;
+    if (!font.openFromFile(path)) {
+        throw std::runtime_error("Failed to load font: " + path);
+    }
+    auto ins = fonts.emplace(path, std::move(font));
+    return ins.first->second;
+}
+
+void FontCache::clear() {
+    fonts.clear();
+}
+
 UIRenderer::UIRenderer(float /* screenWidth */, float /* screenHeight */) {}
 
 std::vector<std::string> UIRenderer::splitWords(const std::string& s) {
@@ -129,4 +145,8 @@ void UIRenderer::placeCharacterBottom(
 
 TextureCache& UIRenderer::getTextureCache() {
     return textureCache;
+}
+
+FontCache& UIRenderer::getFontCache() {
+    return fontCache;
 }

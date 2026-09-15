@@ -102,4 +102,8 @@ const std::vector<BacklogEntry>& StoryEngine::getBacklog() const {
 
 void StoryEngine::onNodeLoaded() {
     gameState.nodesVisited.insert(currentNodeId);
+    const auto& node = getCurrentNode();
+    if (!node.speaker.empty() && !node.dialogue.empty()) {
+        addToBacklog(node.speaker, node.dialogue);
+    }
 }

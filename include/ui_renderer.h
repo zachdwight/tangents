@@ -14,6 +14,15 @@ private:
     std::map<std::string, sf::Texture> textures;
 };
 
+class FontCache {
+public:
+    sf::Font& get(const std::string& path);
+    void clear();
+
+private:
+    std::map<std::string, sf::Font> fonts;
+};
+
 class UIRenderer {
 public:
     explicit UIRenderer(float screenWidth, float screenHeight);
@@ -39,9 +48,11 @@ public:
         float yOffsetPx);
 
     TextureCache& getTextureCache();
+    FontCache& getFontCache();
 
 private:
     TextureCache textureCache;
+    FontCache fontCache;
 
     static std::vector<std::string> splitWords(const std::string& s);
 };
