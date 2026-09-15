@@ -93,7 +93,7 @@ Define your story in `assets/script.toml`:
 ```toml
 [game]
 title = "Tangents"
-version = "0.1.0"
+version = "0.1.1"
 company = "Vine Street Labs"
 
 [window]
@@ -239,6 +239,14 @@ See [DEVELOPMENT.md](DEVELOPMENT.md) for:
 - Extending the script format
 - Performance considerations
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for:
+- Release notes and version history
+- New features and improvements
+- Bug fixes
+- Upcoming features
+
 ## License
 
 MIT License - See LICENSE file
@@ -250,4 +258,4 @@ MIT License - See LICENSE file
 - [ ] Character animation support
 - [ ] Shader effects (transitions, filters)
 - [ ] Mobile platform support
-- [ ] Dialogue history UI
+- [x] Dialogue history UI (v0.1.1)
