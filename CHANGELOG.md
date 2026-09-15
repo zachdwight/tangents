@@ -5,6 +5,44 @@ All notable changes to Tangents will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-09-15
+
+### Added
+- **Settings Menu System** — Complete in-game configuration interface
+  - Press [Tab] to open settings overlay menu
+  - Full keyboard navigation with ↑↓← → arrows
+  - Settings Manager: persistent JSON-based configuration storage
+  - Auto-save on menu close, auto-load on startup
+
+### Settings Options
+- **Audio:** BGM Volume (0-100%), SFX Volume (0-100%)
+- **Display:** Fullscreen toggle, Resolution (1920x1080 default)
+- **Gameplay:** Text Speed (0.5x, 1.0x, 2.0x), Auto-advance toggle
+- **Visual:** Brightness (0.5-1.5), Screen Shake toggle
+
+### UI Features
+- Beautiful overlay menu with semi-transparent background
+- Color-coded interface (yellow selection, cyan adjustments)
+- Slider controls for continuous values (5% increments for volume)
+- Binary toggles for on/off settings
+- Multi-step selections for discrete options
+- Reset to defaults functionality
+- Clear on-screen instructions
+
+### Technical
+- SettingsManager: persistent JSON storage
+- SettingsUI: full-featured in-game menu
+- Automatic directory creation for config files
+- Value validation and clamping on apply
+- Simple but effective JSON parser
+- ~600 lines of settings code
+
+### Integration
+- Seamless menu integration with existing UI
+- Non-blocking: navigate away with Esc
+- Persists across game sessions
+- Config file: `config/settings.json`
+
 ## [0.4.0] - 2026-09-15
 
 ### Added
