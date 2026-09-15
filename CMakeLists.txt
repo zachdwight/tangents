@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(Tangents VERSION 0.5.0 LANGUAGES CXX)
+project(Tangents VERSION 0.6.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -67,7 +67,14 @@ endif()
 # Find toml++ (header-only library)
 # ============================================================================
 
-find_path(TOML_INCLUDE_DIR toml.hpp PATHS /usr/local/include /opt/homebrew/include NO_DEFAULT_PATH)
+find_path(TOML_INCLUDE_DIR toml.hpp
+    PATHS
+        /usr/local/include
+        /opt/homebrew/include
+        /usr/local/Cellar/tomlplusplus/*/include/toml++
+        /opt/homebrew/Cellar/tomlplusplus/*/include/toml++
+    NO_DEFAULT_PATH
+)
 
 if(NOT TOML_INCLUDE_DIR)
     # Try pkg-config
