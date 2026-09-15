@@ -73,10 +73,29 @@ if(PkgConfig_FOUND)
     pkg_check_modules(TOML QUIET tomlplusplus)
     if(TOML_FOUND)
         set(TOML_INCLUDE_DIR ${TOML_INCLUDE_DIRS})
+        message(STATUS "toml++ found via pkg-config at ${TOML_INCLUDE_DIR}")
     endif()
 endif()
 
-# If pkg-config didn't find it, search common paths
+# If pkg-config didn't find it, search common Homebrew paths
+if(NOT TOML_INCLUDE_DIR)
+    # Get Homebrew prefix
+    execute_process(
+        COMMAND brew --prefix tomlplusplus
+        OUTPUT_VARIABLE HOMEBREW_TOML_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+
+    if(HOMEBREW_TOML_PREFIX)
+        find_path(TOML_INCLUDE_DIR toml.hpp
+            PATHS "${HOMEBREW_TOML_PREFIX}/include/toml++"
+            NO_DEFAULT_PATH
+        )
+    endif()
+endif()
+
+# Last resort: search default paths
 if(NOT TOML_INCLUDE_DIR)
     find_path(TOML_INCLUDE_DIR toml.hpp
         PATHS
