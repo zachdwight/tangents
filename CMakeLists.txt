@@ -67,24 +67,24 @@ endif()
 # Find toml++ (header-only library)
 # ============================================================================
 
-find_path(TOML_INCLUDE_DIR toml.hpp
-    PATHS
-        /usr/local/include
-        /opt/homebrew/include
-        /usr/local/Cellar/tomlplusplus/*/include/toml++
-        /opt/homebrew/Cellar/tomlplusplus/*/include/toml++
-    NO_DEFAULT_PATH
-)
-
-if(NOT TOML_INCLUDE_DIR)
-    # Try pkg-config
-    find_package(PkgConfig QUIET)
-    if(PkgConfig_FOUND)
-        pkg_check_modules(TOML QUIET tomlplusplus)
-        if(TOML_FOUND)
-            set(TOML_INCLUDE_DIR ${TOML_INCLUDE_DIRS})
-        endif()
+# First try pkg-config
+find_package(PkgConfig QUIET)
+if(PkgConfig_FOUND)
+    pkg_check_modules(TOML QUIET tomlplusplus)
+    if(TOML_FOUND)
+        set(TOML_INCLUDE_DIR ${TOML_INCLUDE_DIRS})
     endif()
+endif()
+
+# If pkg-config didn't find it, search common paths
+if(NOT TOML_INCLUDE_DIR)
+    find_path(TOML_INCLUDE_DIR toml.hpp
+        PATHS
+            /usr/local/include/toml++
+            /opt/homebrew/include/toml++
+            /usr/local/include
+            /opt/homebrew/include
+    )
 endif()
 
 if(NOT TOML_INCLUDE_DIR)
